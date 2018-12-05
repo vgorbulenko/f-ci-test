@@ -16,10 +16,10 @@ node('master') {
 		}
 
         stage('test stage. Looking for variables') {
-			bat """ echo env.BRANCH_NAME = %env.BRANCH_NAME% | ${BRANCH_NAME} """
-			bat """ echo env.GIT_BRANCH = %env.GIT_BRANCH% | ${BRANCH_NAME} """
-			//bat """ echo env.eventType = %env.eventType%  | ${env.eventType}    """
-			bat """ echo payload = ${payload.ref} """
+			bat """ echo env.BRANCH_NAME = ${BRANCH_NAME} """
+			bat """ echo env.GIT_BRANCH =  ${BRANCH_NAME} """
+			bat """ echo env.eventType = %env.eventType%   ${env.eventType}    """
+			//bat """ echo payload = ${payload.ref} """
 			bat """ echo -------------- """
 		}
     }
