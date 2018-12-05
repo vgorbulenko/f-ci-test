@@ -31,9 +31,11 @@ if (BRANCH_NAME == "release") {
 							//@echo off
 							git config --global user.email "generate-ci@frustum.io"
 							git config --global user.name "Generate CI"
+							git checkout release
 							git tag -a rc-$env.VERSION -m \'autotag\'
+							git push
 							::git push https://%USERNAME%:%USERPASS%@%GIT_URL% rc-$version
-							git push +refs/heads/release:refs/remotes/origin/release
+							::git push +refs/heads/release:refs/remotes/origin/release
 						"""
                     }
 
