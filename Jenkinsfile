@@ -5,7 +5,8 @@ env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
 node('master') {
     ws( env.wsPath ) {
         stage('Checkout on master') {
-            checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-ssh', url: 'git@github.com:frustumInc/generate.git']]]) 
+			checkout scm
+//            checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-ssh', url: 'git@github.com:frustumInc/generate.git']]]) 
 //          checkout([$class: 'GitSCM', branches: [[name: gitlabSourceBranch]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'vgorbulenko_https_github', url: 'https://gitlab.amcbridge.com/spronyuk/pipeline-dev-repo']]])
 		}
 
