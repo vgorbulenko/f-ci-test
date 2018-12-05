@@ -5,7 +5,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release") {
 
 	node('master') {
 		ws( env.wsPath ) {
-			stage('Checkout on master. Branch '+BRANCH_NAME) {
+			stage('Checkout on master.') {
 				def scmVars = checkout scm
 				env.GIT_URL = scmVars.GIT_URL
 			}
@@ -28,10 +28,10 @@ if (BRANCH_NAME == "release") {
                     withCredentials([usernamePassword(credentialsId: 'vgorbulenko_https_github', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
                         bat """
 							//@echo off
-							set /p version=0.0.$BUILD_NUMBER
+							version = 0.0.$BUILD_NUMBER
 							git config --global user.email "generate-ci@frustum.io"
 							git config --global user.name "Generate CI"
-							git tag -a rc-${version} -m \'autotag\'
+							git tag -a rc-$version -m \'autotag\'
 							::git push https://%USERNAME%:%USERPASS%@%GIT_URL% rc-$version
 							git push -u origin release
 						"""
