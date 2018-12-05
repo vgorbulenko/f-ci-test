@@ -43,7 +43,7 @@ node('master') {
 			bat """ echo env.JOB_URL = ${JOB_URL} """
 			//bat """ echo env.GIT_COMMIT = ${GIT_COMMIT} """
 			//bat """ echo env.GIT_PREVIOUS_COMMIT = ${GIT_PREVIOUS_COMMIT} """
-			bat """ echo env.GIT_PREVIOUS_SUCCESSFUL_COMMIT = ${GIT_PREVIOUS_SUCCESSFUL_COMMIT} """
+			//bat """ echo env.GIT_PREVIOUS_SUCCESSFUL_COMMIT = ${GIT_PREVIOUS_SUCCESSFUL_COMMIT} """
 			bat """ echo env.GIT_BRANCH = ${GIT_BRANCH} """
 			bat """ echo env.GIT_LOCAL_BRANCH = ${GIT_LOCAL_BRANCH} """
 			bat """ echo env.GIT_URL = ${GIT_URL} """
