@@ -1,8 +1,8 @@
 
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
 
-//def receive
-//  event_type = request.headers["X-GitHub-Event"]
+def receive
+  event_type = request.headers["X-GitHub-Event"]
 //  payload    = request.body
 
 //env.eventType = event_type
