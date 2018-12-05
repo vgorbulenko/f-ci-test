@@ -17,9 +17,9 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release") {
 			stage ('Parsing URL') {
 			    bat """
 				   @echo off
-				   echo env.GIT_URL
-				   env.GIT_URL = env.GIT_URL.replace('https://','')
-				   echo env.GIT_URL
+				   echo $env.GIT_URL
+				   env.GIT_URL = $env.GIT_URL.replace('https://','')
+				   echo $env.GIT_URL
 				
 				"""
 			
