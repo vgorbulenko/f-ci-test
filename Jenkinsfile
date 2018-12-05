@@ -23,15 +23,14 @@ if (BRANCH_NAME == "release") {
 	node ('master') {
 		ws (env.wsPath) {
 			stage ('Push new tag to GitHub') {
-			   env.GIT_URL = env.GIT_URL.replace('https://','')
+			    env.GIT_URL = env.GIT_URL.replace('https://','')
 				bat 'echo prepare new release tag'
-
                     withCredentials([usernamePassword(credentialsId: 'vgorbulenko_https_github', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
-                        bat """@echo off
+                        bat """//@echo off
                         set /p version=0.0.$BUILD_NUMBER
                         git tag -a rc-%version% -m \'autotag\'
                      //   git push https://%USERNAME%:%USERPASS%@%GIT_URL% rc-%version%"""
-					    git push origin release:release
+						git push origin release:release
                     }
 
 				
