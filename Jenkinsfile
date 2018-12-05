@@ -2,7 +2,7 @@
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
 
 def receive() {
-  event_type = request.headers["X-GitHub-Event"]
+  env.event_type = request.headers["X-GitHub-Event"]
   payload    = request.body
 
 }
@@ -17,8 +17,7 @@ node('master') {
 		}
 
         stage('test stage. Looking for variables') {
-            bat """ echo event_type = %event_type%   """
-            bat """ echo event_type = ${event_type}			"""
+            bat """ echo event_type = %env.event_type%   """
 
     		bat """ echo env.BRANCH_NAME = ${BRANCH_NAME} """
 			bat """ echo env.BRANCH_NAME = %BRANCH_NAME% """
