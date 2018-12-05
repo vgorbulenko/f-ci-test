@@ -24,7 +24,7 @@ node('master') {
 			//bat """ echo env.CHANGE_URL = ${CHANGE_URL} """
 			//bat """ echo env.CHANGE_TITLE =  ${CHANGE_TITLE} """
 			//bat """ echo env.CHANGE_AUTHOR =  ${CHANGE_AUTHOR} """
-			bat """ echo env.CHANGE_AUTHOR_DISPLAY_NAME =  ${CHANGE_AUTHOR_DISPLAY_NAME} """
+			//bat """ echo env.CHANGE_AUTHOR_DISPLAY_NAME =  ${CHANGE_AUTHOR_DISPLAY_NAME} """
 			bat """ echo env.CHANGE_AUTHOR_EMAIL =  ${CHANGE_AUTHOR_EMAIL} """
 			bat """ echo env.CHANGE_TARGET =  ${CHANGE_TARGET} """
 			bat """ echo env.BUILD_NUMBER = ${BUILD_NUMBER} """
