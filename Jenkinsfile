@@ -1,29 +1,45 @@
 
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
 
-def receive
-  event_type = request.headers["X-GitHub-Event"]
-//  payload    = request.body
-
+//def receive() {
+//  env.event_type = request.headers["X-GitHub-Event"]
+//  env.payload    = request.body
+//}
 //env.eventType = event_type
 
-node('master') {
-    ws( env.wsPath ) {
-        stage('Checkout on master') {
-			checkout scm
-//            checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-ssh', url: 'git@github.com:frustumInc/generate.git']]]) 
-//          checkout([$class: 'GitSCM', branches: [[name: gitlabSourceBranch]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'vgorbulenko_https_github', url: 'https://gitlab.amcbridge.com/spronyuk/pipeline-dev-repo']]])
-		}
+if (BRANCH_NAME == "master" || BRANCH_NAME == "release") {
 
-        stage('test stage. Looking for variables') {
-			bat """ echo env.BRANCH_NAME = ${BRANCH_NAME} """
-			bat """ echo env.GIT_BRANCH =  ${BRANCH_NAME} """
-			bat """ echo env.eventType = %env.eventType%   ${env.eventType}    """
-			//bat """ echo payload = ${payload.ref} """
-			bat """ echo -------------- """
+	node('master') {
+		ws( env.wsPath ) {
+			stage('Checkout on master') {
+				checkout scm
+			}
+
+			stage('Building stage') {
+               bat 'echo Build there something============'
+			}
 		}
-    }
+	}
+}	
+
+
+if (BRANCH_NAME == "release") {
+	node ('master') {
+		ws (env.wsPath) {
+			stage ('Push new tag to GitHub') {
+			    bat 'echo prepare new release tag'
+			
+			}		
+		}
+	}
 }
+
+
+if ( BRANCH_NAME.startsWith('r-') ) {
+    bat 'echo THIS IS THE TAAAAAAAAAAAAAAAAAAAAAAG!!!!!!!!!! === $BRANCH_NAME ==='
+}
+
+
 
 //node('slave') {
   //  ws( env.wsPath ) {
