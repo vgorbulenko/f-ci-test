@@ -11,8 +11,8 @@ node('master') {
 		}
 
         stage('Checkout on master') {
-			echo env.BRANCH_NAME = %env.BRANCH_NAME%
-			echo env.GIT_BRANCH = %env.GIT_BRANCH%
+			bat """ echo env.BRANCH_NAME = %env.BRANCH_NAME% """
+			bat """ echo env.GIT_BRANCH = %env.GIT_BRANCH% """
 		}
     }
 }
