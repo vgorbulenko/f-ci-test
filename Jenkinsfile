@@ -47,10 +47,12 @@ node('master') {
 			//bat """ echo env.GIT_BRANCH = ${GIT_BRANCH} """
 			//bat """ echo env.GIT_LOCAL_BRANCH = ${GIT_LOCAL_BRANCH} """
 			//bat """ echo env.GIT_URL = ${GIT_URL} """
-			bat """ echo env.GIT_COMMITTER_NAME = ${GIT_COMMITTER_NAME} """
+			//bat """ echo env.GIT_COMMITTER_NAME = ${GIT_COMMITTER_NAME} """
 			bat """ echo env.GIT_AUTHOR_NAME = ${GIT_AUTHOR_NAME} """
 			bat """ echo env.GIT_COMMITTER_EMAIL = ${GIT_COMMITTER_EMAIL} """
 			bat """ echo env.GIT_AUTHOR_EMAIL = ${GIT_AUTHOR_EMAIL} """
+
+
 			//bat """ echo env.eventType = %env.eventType%   ${env.eventType}    """
 //			bat """ echo env.GIT_COMMIT = ${GIT_COMMIT} """
 //			bat """ echo env.GIT_TAG = ${GIT_TAG} """
