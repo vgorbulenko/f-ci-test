@@ -29,11 +29,11 @@ if (BRANCH_NAME == "release") {
                         bat """
 							//@echo off
 							set /p version=0.0.$BUILD_NUMBER
-							git config --global user.emai "generate-ci@frustum.io"
+							git config --global user.email "generate-ci@frustum.io"
 							git config --global user.name "Generate CI"
 							git tag -a rc-%version% -m \'autotag\'
 							::git push https://%USERNAME%:%USERPASS%@%GIT_URL% rc-%version%
-							git push origin release:release
+							git push -u origin release
 						"""
                     }
 
