@@ -26,12 +26,13 @@ if (BRANCH_NAME == "release") {
 			    env.GIT_URL = env.GIT_URL.replace('https://','')
 				bat 'echo prepare new release tag'
                     withCredentials([usernamePassword(credentialsId: 'vgorbulenko_https_github', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
-                        bat """
+                        env.VERSION = '0.0.' + BUILD_NUMBER
+						bat """
 							//@echo off
-							version = 0.0.$BUILD_NUMBER
+							//version = 0.0.$BUILD_NUMBER
 							git config --global user.email "generate-ci@frustum.io"
 							git config --global user.name "Generate CI"
-							git tag -a rc-$version -m \'autotag\'
+							git tag -a rc-$env.VERSION -m \'autotag\'
 							::git push https://%USERNAME%:%USERPASS%@%GIT_URL% rc-$version
 							git push -u origin release
 						"""
