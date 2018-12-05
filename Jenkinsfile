@@ -19,7 +19,8 @@ node('master') {
 			bat """ echo env.BRANCH_NAME = %env.BRANCH_NAME% """
 			bat """ echo env.GIT_BRANCH = %env.GIT_BRANCH% """
 			//bat """ echo env.eventType = %env.eventType%  | ${env.eventType}    """
-			bat """ echo payload = $payload """
+			bat """ echo payload = ${payload} """
+			bat """ echo -------------- """
 		}
     }
 }
