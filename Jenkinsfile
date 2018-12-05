@@ -7,7 +7,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release") {
 		ws( env.wsPath ) {
 			stage('Checkout on master. Branch '+BRANCH_NAME) {
 				def scmVars = checkout scm
-				def env.GIT_URL = scmVars.GIT_URL
+				env.GIT_URL = scmVars.GIT_URL
 			}
 
 			stage('Building stage') {
