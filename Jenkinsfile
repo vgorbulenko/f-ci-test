@@ -5,7 +5,7 @@ def receive() {
   env.event_type = request.headers["X-GitHub-Event"]
   payload    = request.body
 }
-env.eventType = event_type
+//env.eventType = event_type
 
 node('master') {
     ws( env.wsPath ) {
@@ -18,7 +18,7 @@ node('master') {
         stage('test stage. Looking for variables') {
 
     		bat """ echo event_type = %env.event_type%   """
-    		bat """ echo eventType = %env.eventType%   """
+    		bat """ echo env.wsPath = %env.wsPath%   """
 
     		bat """ echo env.BRANCH_NAME = ${BRANCH_NAME} """
 			bat """ echo env.BRANCH_NAME = %BRANCH_NAME% """
