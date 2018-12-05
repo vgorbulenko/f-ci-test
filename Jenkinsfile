@@ -50,7 +50,7 @@ node('master') {
 			//bat """ echo env.GIT_COMMITTER_NAME = ${GIT_COMMITTER_NAME} """
 			//bat """ echo env.GIT_AUTHOR_NAME = ${GIT_AUTHOR_NAME} """
 			//bat """ echo env.GIT_COMMITTER_EMAIL = ${GIT_COMMITTER_EMAIL} """
-			bat """ echo env.GIT_AUTHOR_EMAIL = ${GIT_AUTHOR_EMAIL} """
+			//bat """ echo env.GIT_AUTHOR_EMAIL = ${GIT_AUTHOR_EMAIL} """
 
 
 			//bat """ echo env.eventType = %env.eventType%   ${env.eventType}    """
