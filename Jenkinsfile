@@ -1,22 +1,28 @@
 
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
 
-//def receive() {
-//  env.event_type = request.headers["X-GitHub-Event"]
-//  env.payload    = request.body
-//}
-//env.eventType = event_type
-
 if (BRANCH_NAME == "master" || BRANCH_NAME == "release") {
 
 	node('master') {
 		ws( env.wsPath ) {
 			stage('Checkout on master. Branch '+BRANCH_NAME) {
-				checkout scm
+				def scmVars = checkout scm
+				def env.GIT_URL = scmVars.GIT_URL
 			}
 
 			stage('Building stage') {
                bat 'echo Build there something============'
+			}
+			
+			stage ('Parsing URL') {
+			    bat """
+				   @echo off
+				   echo env.GIT_URL
+				   env.GIT_URL = env.GIT_URL.replace('https://','')
+				   echo env.GIT_URL
+				
+				"""
+			
 			}
 		}
 	}
@@ -28,7 +34,15 @@ if (BRANCH_NAME == "release") {
 		ws (env.wsPath) {
 			stage ('Push new tag to GitHub') {
 			    bat 'echo prepare new release tag'
-			
+
+                        withCredentials([usernamePassword(credentialsId: 'vgorbulenko_https_github', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
+                            bat """@echo off
+                            set /p version=0.0.$BUILD_NUMBER
+                        //    C:\\Progra~1\\Git\\cmd\\git.exe tag rel-v%version% -m \'autotag\'
+                        //    C:\\Progra~1\\Git\\cmd\\git.exe push https://%USERNAME%:%USERPASS%@gitlab.amcbridge.com/spronyuk/pipeline-dev-repo.git rel-v%version%"""
+                        }
+
+				
 			}		
 		}
 	}
