@@ -11,7 +11,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release") {
 
 	node('master') {
 		ws( env.wsPath ) {
-			stage('Checkout on master') {
+			stage('Checkout on master. Branch '+BRANCH_NAME) {
 				checkout scm
 			}
 
