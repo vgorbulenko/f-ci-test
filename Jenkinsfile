@@ -5,7 +5,7 @@ env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
 //  event_type = request.headers["X-GitHub-Event"]
 //  payload    = request.body
 
-env.eventType = event_type
+//env.eventType = event_type
 
 node('master') {
     ws( env.wsPath ) {
