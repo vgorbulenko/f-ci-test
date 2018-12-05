@@ -18,7 +18,7 @@ node('master') {
         stage('test stage. Looking for variables') {
 			bat """ echo env.BRANCH_NAME = ${BRANCH_NAME} """
 			//bat """ echo env.GIT_BRANCH =  ${GIT_BRANCH} """
-			bat """ echo env.CHANGE_ID =  ${CHANGE_ID} """
+			//bat """ echo env.CHANGE_ID =  ${CHANGE_ID} """
 			bat """ echo env.CHANGE_URL =  ${CHANGE_URL} """
 			bat """ echo env.CHANGE_TITLE =  ${CHANGE_TITLE} """
 			bat """ echo env.CHANGE_AUTHOR =  ${CHANGE_AUTHOR} """
