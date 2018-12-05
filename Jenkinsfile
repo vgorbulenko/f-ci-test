@@ -29,8 +29,9 @@ if (BRANCH_NAME == "release") {
                     withCredentials([usernamePassword(credentialsId: 'vgorbulenko_https_github', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
                         bat """@echo off
                         set /p version=0.0.$BUILD_NUMBER
-                        git tag rc-%version% -m \'autotag\'
-                        git push https://%USERNAME%:%USERPASS%@%GIT_URL% rc-%version%"""
+                        git tag -a rc-%version% -m \'autotag\'
+                     //   git push https://%USERNAME%:%USERPASS%@%GIT_URL% rc-%version%"""
+					    git push origin release:release
                     }
 
 				
