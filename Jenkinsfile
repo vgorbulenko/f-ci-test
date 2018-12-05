@@ -17,7 +17,8 @@ node('master') {
 		}
 
         stage('test stage. Looking for variables') {
-
+            bat """ git tag """
+		
     		bat """ echo event_type = $env.event_type   """
     		bat """ echo env.wsPath = $env.wsPath   """
     		bat """ echo payload = $env.payload   """
