@@ -14,13 +14,6 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release") {
                bat 'echo Build there something============'
 			}
 			
-			stage ('Parsing URL') {
-			    bat """
-				   @echo off
-				   echo %GIT_URL%
-				"""
-			
-			}
 		}
 	}
 }	
@@ -36,8 +29,8 @@ if (BRANCH_NAME == "release") {
                     withCredentials([usernamePassword(credentialsId: 'vgorbulenko_https_github', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
                         bat """@echo off
                         set /p version=0.0.$BUILD_NUMBER
-                        //    C:\\Progra~1\\Git\\cmd\\git.exe tag rel-v%version% -m \'autotag\'
-                        //    C:\\Progra~1\\Git\\cmd\\git.exe push https://%USERNAME%:%USERPASS%@%GIT_URL% rc-%version%"""
+                        git tag rc-%version% -m \'autotag\'
+                        git push https://%USERNAME%:%USERPASS%@%GIT_URL% rc-%version%"""
                     }
 
 				
