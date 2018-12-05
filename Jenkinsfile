@@ -41,7 +41,7 @@ node('master') {
 			bat """ echo env.JENKINS_URL = ${JENKINS_URL} """
 			bat """ echo env.BUILD_URL = ${BUILD_URL} """
 			bat """ echo env.JOB_URL = ${JOB_URL} """
-			bat """ echo env.GIT_COMMIT = ${GIT_COMMIT} """
+			//bat """ echo env.GIT_COMMIT = ${GIT_COMMIT} """
 			bat """ echo env.GIT_PREVIOUS_COMMIT = ${GIT_PREVIOUS_COMMIT} """
 			bat """ echo env.GIT_PREVIOUS_SUCCESSFUL_COMMIT = ${GIT_PREVIOUS_SUCCESSFUL_COMMIT} """
 			bat """ echo env.GIT_BRANCH = ${GIT_BRANCH} """
