@@ -5,7 +5,7 @@ node('master') {
 	ws( env.wsPath ) {
 		stage ('Debud stage') {
 			bat """
-			echo Current branc name is $BRANCH_NAME
+			echo Current branch name is $BRANCH_NAME
 		"""
 		}
 	}
@@ -58,7 +58,11 @@ if (BRANCH_NAME == "release") {
 
 
 if ( BRANCH_NAME.startsWith('r-') ) {
-    bat 'echo THIS IS THE TAAAAAAAAAAAAAAAAAAAAAAG!!!!!!!!!! === $BRANCH_NAME ==='
+	ws( env.wsPath ) {
+		stage ('Debud stage') {
+			bat 'echo THIS IS THE TAAAAAAAAAAAAAAAAAAAAAAG!!!!!!!!!! === $BRANCH_NAME ==='
+		}
+	}
 }
 
 
