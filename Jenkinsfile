@@ -11,11 +11,7 @@ node('master') {
 	}
 }
 
-//TODO Versioning
-// master release stage
-// r- stage
-
-
+//clone repos and checkout
 if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWith('r-')) {
 
 	node('master') {
@@ -25,7 +21,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 				env.GIT_URL = scmVars.GIT_URL
 				bat """
 				    @echo off
-					echo scmVars
+					echo $scmVars
 				
 				"""
 			}
@@ -37,6 +33,49 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 		}
 	}
 }	
+
+
+//Versioning
+// master release stage
+if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
+	node('master') {
+		ws( env.wsPath ) {
+			stage('Versioning') {
+			    bat """
+				    ::@echo off
+					echo ===Versioning===
+					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
+					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% %BUILD_NUMBER% 2>tmp_version.txt
+					$GenerateBuildVersion=readFile('tmp_version.txt').trim()
+					exit 0
+				"""
+			}
+		}
+	}
+
+}
+
+// r- stage
+if (BRANCH_NAME.startsWith('r-')) {
+	node('master') {
+		ws( env.wsPath ) {
+			stage('Versioning') {
+				env.GenerateBuildVersion=BRANCH_NAME.replace('r-','')
+				env.bn=GenerateBuildVersion.split('.').get(2)
+				bat """
+					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
+					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% %BUILD_NUMBER% 2>tmp_version.txt
+					exit 0
+				"""
+			}
+		}
+	}
+}
+
+//TODO packing and copy repo to slave
+//TODO building on slave
+//TODO copying results to s3 (from slave or from master ? )
+
 
 
 if (BRANCH_NAME == "release") {
