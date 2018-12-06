@@ -67,9 +67,7 @@ if (BRANCH_NAME.startsWith('r-')) {
 }
 
 //TODO packing and copy repo to slave
-
 //TODO building on slave
-
 //TODO copying results to s3 (from slave or from master ? )
 
 
