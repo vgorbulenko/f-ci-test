@@ -58,9 +58,11 @@ if (BRANCH_NAME == "release") {
 
 
 if ( BRANCH_NAME.startsWith('r-') ) {
-	ws( env.wsPath ) {
-		stage ('Debud stage') {
-			bat 'echo THIS IS THE TAAAAAAAAAAAAAAAAAAAAAAG!!!!!!!!!! === $BRANCH_NAME ==='
+	node ('master') {
+		ws( env.wsPath ) {
+			stage ('Debud stage') {
+				bat 'echo THIS IS THE TAAAAAAAAAAAAAAAAAAAAAAG!!!!!!!!!! === $BRANCH_NAME ==='
+			}
 		}
 	}
 }
