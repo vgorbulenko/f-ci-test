@@ -24,7 +24,6 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 	}
 }	
 
-
 //Versioning
 // master release stage
 if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
