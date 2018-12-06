@@ -22,9 +22,9 @@ node('master') {
 			}
 			bat """
 				@echo off
-				echo Current branch name is $BRANCH_NAME
-				echo GenerateBuildStage == $env.GenerateBuildStage
-				echo GenerateBuildRelease == $env.GenerateBuildRelease
+				echo Current branch name is %BRANCH_NAME%
+				echo GenerateBuildStage == %GenerateBuildStage%
+				echo GenerateBuildRelease == %GenerateBuildRelease%
 			"""
 
 		}
@@ -50,16 +50,16 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 		ws( env.wsPath ) {
 			stage('Versioning') {
 			    bat """
-				    ::@echo off
+				    @echo off
 					echo ===Versioning===
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
 					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% %BUILD_NUMBER% 2>tmp_version.txt
+					::todo /Generate.WebInstaller/Version.cs
 					exit 0
 					"""
 				env.GenerateBuildVersion=readFile('tmp_version.txt').trim()
 				bat """
 					@echo off
-					::echo ==== GenerateBuildVersion = $env.GenerateBuildVersion =====
 					echo ==== GenerateBuildVersion = %GenerateBuildVersion% =====
 				"""
 			}
@@ -76,10 +76,11 @@ if (BRANCH_NAME.startsWith('r-')) {
 				env.GenerateBuildVersion=BRANCH_NAME.replace('r-','')
 				env.bn=GenerateBuildVersion.split("\\.")[2]
 				bat """
-					echo $env.bn
+					@echo off
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
 					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% $env.bn 2>tmp_version.txt
-					echo ==== GenerateBuildVersion = $env.GenerateBuildVersion ====
+					::todo /Generate.WebInstaller/Version.cs
+					echo ==== GenerateBuildVersion = %GenerateBuildVersion% ====
 					exit 0
 				"""
 			}
