@@ -1,5 +1,6 @@
 
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
+env.GenerateBuildVersion = "0.0.0"
 
 node('master') {
 	ws( env.wsPath ) {
@@ -25,11 +26,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 				
 				"""
 			}
-
-			stage('Building stage') {
-               bat 'echo Build there something============'
-			}
-			
+	
 		}
 	}
 }	
@@ -46,7 +43,8 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 					echo ===Versioning===
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
 					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% %BUILD_NUMBER% 2>tmp_version.txt
-					$GenerateBuildVersion=readFile('tmp_version.txt').trim()
+					$env.GenerateBuildVersion=readFile('tmp_version.txt').trim()
+					echo GenerateBuildVersion ==== $env.GenerateBuildVersion
 					exit 0
 				"""
 			}
@@ -54,7 +52,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 	}
 
 }
-
+//Versioning
 // r- stage
 if (BRANCH_NAME.startsWith('r-')) {
 	node('master') {
@@ -65,6 +63,7 @@ if (BRANCH_NAME.startsWith('r-')) {
 				bat """
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
 					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% %BUILD_NUMBER% 2>tmp_version.txt
+					echo GenerateBuildVersion ==== $env.GenerateBuildVersion
 					exit 0
 				"""
 			}
