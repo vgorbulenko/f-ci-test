@@ -1,13 +1,32 @@
 
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
 env.GenerateBuildVersion = "0.0.0"
+env.GenerateBuildStage = "0"
+//if GenerateBuildRelease == 1 -- sing the installers
+env.GenerateBuildRelease = "0"
 
 node('master') {
 	ws( env.wsPath ) {
-		stage ('Debud stage') {
+		stage ('Initial stage') {
+			if (BRANCH_NAME == "master") {
+				env.GenerateBuildStage="qa"
+				env.GenerateBuildRelease="0"
+			}
+			if (BRANCH_NAME == "release") {
+				env.GenerateBuildStage="rc"
+				env.GenerateBuildRelease="0"
+			}
+			if (BRANCH_NAME.startsWith('r-')) {
+				env.GenerateBuildStage=""
+				env.GenerateBuildRelease="1"
+			}
 			bat """
-			echo Current branch name is $BRANCH_NAME
-		"""
+				@echo off
+				echo Current branch name is $BRANCH_NAME
+				echo GenerateBuildStage == $env.GenerateBuildStage
+				echo GenerateBuildRelease == $env.GenerateBuildRelease
+			"""
+
 		}
 	}
 }
@@ -40,7 +59,8 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 				env.GenerateBuildVersion=readFile('tmp_version.txt').trim()
 				bat """
 					@echo off
-					echo GenerateBuildVersion ==== $env.GenerateBuildVersion
+					::echo ==== GenerateBuildVersion = $env.GenerateBuildVersion =====
+					echo ==== GenerateBuildVersion = %GenerateBuildVersion% =====
 				"""
 			}
 		}
@@ -59,7 +79,7 @@ if (BRANCH_NAME.startsWith('r-')) {
 					echo $env.bn
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
 					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% $env.bn 2>tmp_version.txt
-					echo GenerateBuildVersion ==== $env.GenerateBuildVersion
+					echo ==== GenerateBuildVersion = $env.GenerateBuildVersion ====
 					exit 0
 				"""
 			}
