@@ -11,14 +11,23 @@ node('master') {
 	}
 }
 
+//TODO Versioning
+// master release stage
+// r- stage
 
-if (BRANCH_NAME == "master" || BRANCH_NAME == "release") {
+
+if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWith('r-')) {
 
 	node('master') {
 		ws( env.wsPath ) {
 			stage('Checkout on master.') {
 				def scmVars = checkout scm
 				env.GIT_URL = scmVars.GIT_URL
+				bat """
+				    @echo off
+					echo scmVars
+				
+				"""
 			}
 
 			stage('Building stage') {
@@ -60,8 +69,10 @@ if (BRANCH_NAME == "release") {
 if ( BRANCH_NAME.startsWith('r-') ) {
 	node ('master') {
 		ws( env.wsPath ) {
-			stage ('Debud stage') {
-				bat 'echo THIS IS THE TAAAAAAAAAAAAAAAAAAAAAAG!!!!!!!!!! === $BRANCH_NAME ==='
+			stage ('Publishing installers to PROD bucket') {
+				bat """
+					echo THIS IS THE TAAAAAAAAAAAAAAAAAAAAAAG!!!!!!!!!! === $BRANCH_NAME ===
+				"""
 			}
 		}
 	}
