@@ -1,12 +1,14 @@
 
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
 
-stage ('Debud stage') {
-    bat """
-		echo Current branc name is $BRANCH_NAME
-	
-	
-	"""
+node('master') {
+	ws( env.wsPath ) {
+		stage ('Debud stage') {
+			bat """
+			echo Current branc name is $BRANCH_NAME
+		"""
+		}
+	}
 }
 
 
