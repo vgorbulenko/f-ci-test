@@ -22,9 +22,9 @@ node('master') {
 			}
 			bat """
 				@echo off
-				echo Current branch name is %BRANCH_NAME%
-				echo GenerateBuildStage == %GenerateBuildStage%
-				echo GenerateBuildRelease == %GenerateBuildRelease%
+				echo ==== Current branch name is %BRANCH_NAME% ====
+				echo ==== GenerateBuildStage == %GenerateBuildStage% ====
+				echo ==== GenerateBuildRelease == %GenerateBuildRelease% ====
 			"""
 
 		}
@@ -88,10 +88,73 @@ if (BRANCH_NAME.startsWith('r-')) {
 	}
 }
 
-//TODO packing and copy repo to slave
-//TODO building on slave
-//TODO copying results to s3 (from slave or from master ? )
+//packing and copy repo to slave. Both branches and r-
+if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWith('r-')) {
+	node('master') {
+		ws( env.wsPath ) {
+			stage('Preparing archive with source code') {
+				bat """ 
+					echo Cleaning up
+					rd /Q /S %WORKSPACE%\\build
+					rd /Q /S %WORKSPACE%\\sources > nul 2>&1				
+					mkdir %WORKSPACE%\\sources
+					C:\\Progra~1\\7-Zip\\7z.exe a %WORKSPACE%\\sources\\%BRANCH_NAME%_%GenerateBuildVersion%.zip %WORKSPACE%\\*
+					exit 0
+				"""
+			}
+			stage('Transfer sources to S3 temp bucket') {
+				bat """aws s3 rm s3://frustum-temp/temp --recursive"""
+				bat """aws s3 cp %WORKSPACE%\\sources\\%BRANCH_NAME%_%GenerateBuildVersion%.zip s3://frustum-temp/temp/%BRANCH_NAME%_%GenerateBuildVersion%.zip --sse"""
+			}
+	
+		}
+	}
+}
 
+
+//building on slave and returning(?) results(?)
+if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWith('r-')) {
+	node('slave') {
+		ws( env.wsPath ) {
+			stage('Copyng sources from S3 temp bucket') {
+				bat """
+					rd /Q /S %WORKSPACE% > nul 2>&1				
+					mkdir %WORKSPACE%
+					aws s3 cp s3://frustum-temp/temp/%BRANCH_NAME%_%GenerateBuildVersion%.zip %WORKSPACE%\\%BRANCH_NAME%_%GenerateBuildVersion%.zip --sse
+					aws s3 rm s3://frustum-temp/temp --recursive
+				"""
+			}
+	
+			stage('Unpacking sources') {
+				bat """
+					C:\\Progra~1\\7-Zip\\7z.exe x -y %WORKSPACE%\\%BRANCH_NAME%_%GenerateBuildVersion%.zip
+				"""
+			}	
+        
+			stage('Building solution') {
+				bat """
+					echo cleaning up
+					rd /Q /S %WORKSPACE%\\build
+					echo Re-build solution
+					::"C:\\Program Files (x86)\\MSBuild\\14.0\\Bin\\MSBuild.exe" Generate.Release.sln /t:Rebuild /p:Configuration=BuildRelease /p:Platform="x64" /p:QtMsBuild="C:\\Users\\Administrator\\AppData\\Local\\QtMsBuild" 
+				"""
+			}	
+        
+			stage('Returning results') {
+				bat """
+					echo Preparing result to pushing to S3 bucket
+					::SET dir_installers=%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product
+
+					echo Publishing results
+					::aws s3 cp %dir_installers%\\ s3://frustum-temp/QA/%build_version%/ --sse --recursive
+				"""
+			}	
+		}	
+	}
+}
+
+
+//TODO copying results to s3 (from slave or from master ? )
 
 
 if (BRANCH_NAME == "release") {
