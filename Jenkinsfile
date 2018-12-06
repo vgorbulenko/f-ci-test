@@ -55,7 +55,7 @@ if (BRANCH_NAME.startsWith('r-')) {
 			stage('Versioning') {
 				env.GenerateBuildVersion=BRANCH_NAME.replace('r-','')
 				//env.bn=GenerateBuildVersion.split('.').get(2)
-				env.bn=GenerateBuildVersion.split('\.')
+				env.bn=GenerateBuildVersion.split("\\.")[2]
 				bat """
 					echo $env.bn
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
