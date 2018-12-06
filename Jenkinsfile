@@ -14,19 +14,12 @@ node('master') {
 
 //clone repos and checkout
 if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWith('r-')) {
-
 	node('master') {
 		ws( env.wsPath ) {
 			stage('Checkout on master.') {
 				def scmVars = checkout scm
 				env.GIT_URL = scmVars.GIT_URL
-				bat """
-				    @echo off
-					echo $scmVars
-				
-				"""
 			}
-	
 		}
 	}
 }	
@@ -43,9 +36,12 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 					echo ===Versioning===
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
 					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% %BUILD_NUMBER% 2>tmp_version.txt
-					$env.GenerateBuildVersion=readFile('tmp_version.txt').trim()
-					echo GenerateBuildVersion ==== $env.GenerateBuildVersion
 					exit 0
+					"""
+				env.GenerateBuildVersion=readFile('tmp_version.txt').trim()
+				bat """
+					@echo off
+					echo GenerateBuildVersion ==== $env.GenerateBuildVersion
 				"""
 			}
 		}
