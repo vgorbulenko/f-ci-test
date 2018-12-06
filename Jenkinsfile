@@ -54,10 +54,12 @@ if (BRANCH_NAME.startsWith('r-')) {
 		ws( env.wsPath ) {
 			stage('Versioning') {
 				env.GenerateBuildVersion=BRANCH_NAME.replace('r-','')
-				env.bn=GenerateBuildVersion.split('.').get(2)
+				//env.bn=GenerateBuildVersion.split('.').get(2)
+				env.bn=GenerateBuildVersion.split('.')
 				bat """
+					echo $env.bn
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
-					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% %BUILD_NUMBER% 2>tmp_version.txt
+					::python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% $env.bn 2>tmp_version.txt
 					echo GenerateBuildVersion ==== $env.GenerateBuildVersion
 					exit 0
 				"""
@@ -82,7 +84,7 @@ if (BRANCH_NAME == "release") {
 					withCredentials([usernamePassword(credentialsId: 'vgorbulenko_token_github', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
                         env.VERSION = '0.0.' + BUILD_NUMBER
 						bat """
-							//@echo off
+							@echo off
 							git config --global user.email "generate-ci@frustum.io"
 							git config --global user.name "Generate CI"
 							git tag -a rc-$env.VERSION -m \'autotag\'
