@@ -54,12 +54,11 @@ if (BRANCH_NAME.startsWith('r-')) {
 		ws( env.wsPath ) {
 			stage('Versioning') {
 				env.GenerateBuildVersion=BRANCH_NAME.replace('r-','')
-				//env.bn=GenerateBuildVersion.split('.').get(2)
 				env.bn=GenerateBuildVersion.split("\\.")[2]
 				bat """
 					echo $env.bn
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
-					::python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% $env.bn 2>tmp_version.txt
+					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% $env.bn 2>tmp_version.txt
 					echo GenerateBuildVersion ==== $env.GenerateBuildVersion
 					exit 0
 				"""
