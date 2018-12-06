@@ -1,6 +1,15 @@
 
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
 
+stage ('Debud stage') {
+    bat """
+		echo Current branc name is $BRANCH_NAME
+	
+	
+	"""
+}
+
+
 if (BRANCH_NAME == "master" || BRANCH_NAME == "release") {
 
 	node('master') {
