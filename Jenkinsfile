@@ -1,5 +1,6 @@
 
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
+env.bucketName = "s3://frustum-installer/"
 env.GenerateBuildVersion = "0.0.0"
 env.GenerateBuildStage = "0"
 //if GenerateBuildRelease == 1 -- sing the installers
@@ -117,7 +118,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 }
 
 
-//building on slave and returning(?) results(?)
+//building on slave and deploying results
 if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWith('r-')) {
 	node('slave') {
 		ws( env.wsPath ) {
@@ -148,20 +149,43 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 			}	
         
 			stage('Returning results') {
+//				if ( BRANCH_NAME == "master" )  { env.bucketName = env.bucketName+"qa/" }
+//				if ( BRANCH_NAME == "release" ) { env.bucketName = env.bucketName+"rc/" }
+				if ( BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
+					env.bucketName = env.bucketName+env.GenerateBuildStage+"/" 
+				}
+				}
+				bat """
+					::just testing environment variables
+					echo ==== SLAVE ==== Current branch name is %BRANCH_NAME% ====
+					echo ==== SLAVE ==== GenerateBuildStage == %GenerateBuildStage% ====
+					echo ==== SLAVE ==== GenerateBuildRelease == %GenerateBuildRelease% ====
+					echo ==== SLAVE ==== GenerateBuildVersion == %GenerateBuildVersion% ====
+					echo ==== SLAVE ==== bucketName == %bucketName% ====
+				"""
 				bat """
 					echo Preparing result to pushing to S3 bucket
-					::SET dir_installers=%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product
+					SET dir_installers=%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product
+					
+					::just testing step
+					mkdir %dir_installers%
+					echo %GenerateBuildVersion% version.json > version.json
+					echo %GenerateBuildVersion% GENERATEInstaller.exe > GENERATEInstaller.exe
+					echo %GenerateBuildVersion% GENERATE.Bootstrapper.exe > GENERATE.Bootstrapper.exe
+					echo %GenerateBuildVersion% GENERATE.Package.exe > GENERATE.Package.exe
+					::end of just testing step
 
 					echo Publishing results
 					::aws s3 cp %dir_installers%\\ s3://frustum-temp/QA/%build_version%/ --sse --recursive
+					aws s3 cp %dir_installers%\\version.json %bucketName%/version.json --sse --recursive
+					aws s3 cp %dir_installers%\\GENERATEInstaller.exe %bucketName%/GENERATEInstaller.exe --sse --recursive
+					aws s3 cp %dir_installers%\\GENERATE.Bootstrapper.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Bootstrapper.exe --sse --recursive
+					aws s3 cp %dir_installers%\\GENERATE.Package.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Package.exe --sse --recursive
 				"""
 			}	
 		}	
 	}
 }
-
-
-//TODO copying results to s3 (from slave or from master ? )
 
 
 if (BRANCH_NAME == "release") {
@@ -185,20 +209,6 @@ if (BRANCH_NAME == "release") {
 		}
 	}
 }
-
-
-if ( BRANCH_NAME.startsWith('r-') ) {
-	node ('master') {
-		ws( env.wsPath ) {
-			stage ('Publishing installers to PROD bucket') {
-				bat """
-					echo THIS IS THE TAAAAAAAAAAAAAAAAAAAAAAG!!!!!!!!!! === $BRANCH_NAME ===
-				"""
-			}
-		}
-	}
-}
-
 
 
 //node('slave') {
