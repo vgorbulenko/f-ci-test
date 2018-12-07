@@ -59,7 +59,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 				env.GenerateBuildVersion=readFile('tmp_version.txt').trim()
 				bat """
 					SET VERSION_PATH=%WORKSPACE%\\Generate.WebInstaller\\Version.cs
-					python %SCRIPTS-DIR%\\UpdateVersion-in-cs-from-source.py %VERSION_PATH% %GenerateBuildVersion% 2>tmp_version.txt
+					python %SCRIPTS-DIR%\\UpdateVersion-in-cs-from-source.py %VERSION_PATH% %GenerateBuildVersion% 2>tmp_version_cs.txt
 					exit 0
 				"""
 				bat """
