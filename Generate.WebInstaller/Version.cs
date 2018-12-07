@@ -9,7 +9,4 @@
 public static class Constants
 {
     internal const string ASSEMBLY_VERSION = "0.1.0";
-    internal const string AUTHOR_NAME = "Frustum Inc.";
-    internal const string DESCRIPTION = "GENERATE Installer.";
-    internal const string COPYRIGHT = "Copyright 2018";
 }

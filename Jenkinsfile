@@ -126,6 +126,8 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					rd /Q /S %WORKSPACE% > nul 2>&1				
 					mkdir %WORKSPACE%
 					aws s3 cp s3://frustum-temp/temp/%BRANCH_NAME%_%GenerateBuildVersion%.zip %WORKSPACE%\\%BRANCH_NAME%_%GenerateBuildVersion%.zip --sse
+				"""
+				bat """
 					aws s3 rm s3://frustum-temp/temp --recursive
 				"""
 			}
