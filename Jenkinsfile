@@ -1,6 +1,6 @@
 
 env.wsPath = "C:\\Jenkins_workspace\\test-pipeline"
-env.bucketName = "s3://frustum-installer/"
+env.bucketName = "s3://frustum-installer"
 env.GenerateBuildVersion = "0.0.0"
 env.GenerateBuildStage = "0"
 //if GenerateBuildRelease == 1 -- sing the installers
@@ -166,7 +166,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
         
 			stage('Returning results') {
 				if ( BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
-					env.bucketName = env.bucketName+env.GenerateBuildStage
+					env.bucketName = env.bucketName+"/"+env.GenerateBuildStage
 				}
 				bat """
 					::just testing environment variables
