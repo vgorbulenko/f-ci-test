@@ -8,15 +8,15 @@ env.GenerateBuildRelease = "0"
 node('master') {
 	ws( env.wsPath ) {
 		stage ('Initial stage') {
-			if (BRANCH_NAME == "master") {
+			if ( BRANCH_NAME == "master" ) {
 				env.GenerateBuildStage="qa"
 				env.GenerateBuildRelease="0"
 			}
-			if (BRANCH_NAME == "release") {
+			if ( BRANCH_NAME == "release" ) {
 				env.GenerateBuildStage="rc"
 				env.GenerateBuildRelease="0"
 			}
-			if ((BRANCH_NAME.startsWith('r-')) {
+			if ( BRANCH_NAME.startsWith('r-') ) {
 				env.GenerateBuildStage=""
 				env.GenerateBuildRelease="1"
 			}
