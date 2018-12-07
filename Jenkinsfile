@@ -163,7 +163,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					echo ==== SLAVE ==== bucketName == %bucketName% ====
 				"""
 				bat """
-					echo Preparing result to pushing to S3 bucket
+					echo ==== Preparing result to pushing to S3 bucket ====
 					SET dir_installers=%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product
 					
 					::just testing step
@@ -174,12 +174,12 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					echo %GenerateBuildVersion% GENERATE.Package.exe > %dir_installers%\\GENERATE.Package.exe
 					::end of just testing step
 
-					echo Publishing results
+					echo ==== Publishing results ====
 					::aws s3 cp %dir_installers%\\ s3://frustum-temp/QA/%build_version%/ --sse --recursive
-					aws s3 cp %dir_installers%\\version.json %bucketName%/version.json --sse --recursive
-					aws s3 cp %dir_installers%\\GENERATEInstaller.exe %bucketName%/GENERATEInstaller.exe --sse --recursive
-					aws s3 cp %dir_installers%\\GENERATE.Bootstrapper.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Bootstrapper.exe --sse --recursive
-					aws s3 cp %dir_installers%\\GENERATE.Package.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Package.exe --sse --recursive
+					aws s3 cp %dir_installers%\\version.json %bucketName%/ --sse --recursive
+					aws s3 cp %dir_installers%\\GENERATEInstaller.exe %bucketName%/ --sse --recursive
+					aws s3 cp %dir_installers%\\GENERATE.Bootstrapper.exe %bucketName%/%GenerateBuildVersion%/ --sse --recursive
+					aws s3 cp %dir_installers%\\GENERATE.Package.exe %bucketName%/%GenerateBuildVersion%/ --sse --recursive
 				"""
 			}	
 		}	
