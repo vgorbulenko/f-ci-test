@@ -154,7 +154,6 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 				if ( BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 					env.bucketName = env.bucketName+env.GenerateBuildStage+"/" 
 				}
-				}
 				bat """
 					::just testing environment variables
 					echo ==== SLAVE ==== Current branch name is %BRANCH_NAME% ====
