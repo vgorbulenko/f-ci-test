@@ -124,7 +124,8 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 		ws( env.wsPath ) {
 			stage('Copyng sources from S3 temp bucket') {
 				bat """
-					rd /Q /S %WORKSPACE% > nul 2>&1				
+					rd /Q /S %WORKSPACE%
+					:: > nul 2>&1				
 					mkdir %WORKSPACE%
 					aws s3 cp s3://frustum-temp/temp/%BRANCH_NAME%_%GenerateBuildVersion%.zip %WORKSPACE%\\%BRANCH_NAME%_%GenerateBuildVersion%.zip --sse
 				"""
@@ -149,8 +150,6 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 			}	
         
 			stage('Returning results') {
-//				if ( BRANCH_NAME == "master" )  { env.bucketName = env.bucketName+"qa/" }
-//				if ( BRANCH_NAME == "release" ) { env.bucketName = env.bucketName+"rc/" }
 				if ( BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 					env.bucketName = env.bucketName+env.GenerateBuildStage+"/" 
 				}
@@ -176,8 +175,8 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 
 					echo ==== Publishing results ====
 					::aws s3 cp %dir_installers%\\ s3://frustum-temp/QA/%build_version%/ --sse --recursive
-					aws s3 cp %dir_installers%\\version.json %bucketName%/ --sse --recursive
-					aws s3 cp %dir_installers%\\GENERATEInstaller.exe %bucketName%/ --sse --recursive
+					aws s3 cp %dir_installers%\\version.json %bucketName% --sse --recursive
+					aws s3 cp %dir_installers%\\GENERATEInstaller.exe %bucketName% --sse --recursive
 					aws s3 cp %dir_installers%\\GENERATE.Bootstrapper.exe %bucketName%/%GenerateBuildVersion%/ --sse --recursive
 					aws s3 cp %dir_installers%\\GENERATE.Package.exe %bucketName%/%GenerateBuildVersion%/ --sse --recursive
 				"""
