@@ -59,6 +59,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 					"""
 				env.GenerateBuildVersion=readFile('tmp_version.txt').trim()
 				bat """
+				@echo off
 					SET VERSION_PATH=%WORKSPACE%\\Generate.WebInstaller\\Version.cs
 					python %SCRIPTS-DIR%\\UpdateVersion-in-cs-from-source.py %VERSION_PATH% %GenerateBuildVersion% 2>tmp_version_cs.txt
 					exit 0
@@ -100,6 +101,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 		ws( env.wsPath ) {
 			stage('Preparing archive with source code') {
 				bat """ 
+					@echo off
 					echo Cleaning up
 					rd /Q /S %WORKSPACE%\\build
 					rd /Q /S %WORKSPACE%\\sources > nul 2>&1				
@@ -124,24 +126,28 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 		ws( env.wsPath ) {
 			stage('Copyng sources from S3 temp bucket') {
 				bat """
+					::@echo off
 					rd /Q /S %WORKSPACE%
 					:: > nul 2>&1				
 					mkdir %WORKSPACE%
 					aws s3 cp s3://frustum-temp/temp/%BRANCH_NAME%_%GenerateBuildVersion%.zip %WORKSPACE%\\%BRANCH_NAME%_%GenerateBuildVersion%.zip --sse
 				"""
 				bat """
+					@echo off
 					aws s3 rm s3://frustum-temp/temp --recursive
 				"""
 			}
 	
 			stage('Unpacking sources') {
 				bat """
+					@echo off
 					C:\\Progra~1\\7-Zip\\7z.exe x -y %WORKSPACE%\\%BRANCH_NAME%_%GenerateBuildVersion%.zip
 				"""
 			}	
         
 			stage('Building solution') {
 				bat """
+					::@echo off
 					echo cleaning up
 					rd /Q /S %WORKSPACE%\\build
 					echo Re-build solution
@@ -155,6 +161,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 				}
 				bat """
 					::just testing environment variables
+					@echo off
 					echo ==== SLAVE ==== Current branch name is %BRANCH_NAME% ====
 					echo ==== SLAVE ==== GenerateBuildStage == %GenerateBuildStage% ====
 					echo ==== SLAVE ==== GenerateBuildRelease == %GenerateBuildRelease% ====
@@ -162,6 +169,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					echo ==== SLAVE ==== bucketName == %bucketName% ====
 				"""
 				bat """
+					::@echo off
 					echo ==== Preparing result to pushing to S3 bucket ====
 					SET dir_installers=%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product
 					
