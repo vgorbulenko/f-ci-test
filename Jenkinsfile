@@ -184,10 +184,10 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					echo ==== Publishing results ====
 					::aws s3 cp %dir_installers%\\ s3://frustum-temp/QA/%build_version%/ --sse --recursive
 					cd %dir_installers%
-					aws s3 cp version.json %bucketName%version.json --sse --recursive
-					aws s3 cp GENERATEInstaller.exe %bucketName%GENERATEInstaller.exe --sse --recursive
-					aws s3 cp GENERATE.Bootstrapper.exe %bucketName%%GenerateBuildVersion%/GENERATE.Bootstrapper.exe --sse --recursive
-					aws s3 cp GENERATE.Package.exe %bucketName%%GenerateBuildVersion%/GENERATE.Package.exe --sse --recursive
+					aws s3 cp version.json %bucketName%version.json --sse
+					aws s3 cp GENERATEInstaller.exe %bucketName%GENERATEInstaller.exe --sse
+					aws s3 cp GENERATE.Bootstrapper.exe %bucketName%%GenerateBuildVersion%/GENERATE.Bootstrapper.exe --sse
+					aws s3 cp GENERATE.Package.exe %bucketName%%GenerateBuildVersion%/GENERATE.Package.exe --sse
 				"""
 			}	
 		}	
