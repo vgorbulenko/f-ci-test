@@ -16,7 +16,7 @@ node('master') {
 				env.GenerateBuildStage="rc"
 				env.GenerateBuildRelease="0"
 			}
-			if (BRANCH_NAME.startsWith('r-')) {
+			if ((BRANCH_NAME.startsWith('r-')) {
 				env.GenerateBuildStage=""
 				env.GenerateBuildRelease="1"
 			}
