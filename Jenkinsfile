@@ -157,7 +157,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
         
 			stage('Returning results') {
 				if ( BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
-					env.bucketName = env.bucketName+env.GenerateBuildStage+"/" 
+					env.bucketName = env.bucketName+env.GenerateBuildStage
 				}
 				bat """
 					::just testing environment variables
@@ -168,10 +168,10 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					echo ==== SLAVE ==== GenerateBuildVersion == %GenerateBuildVersion% ====
 					echo ==== SLAVE ==== bucketName == %bucketName% ====
 				"""
+				env.dir_installers="%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product"
 				bat """
 					::@echo off
-					echo ==== Preparing result to pushing to S3 bucket ====
-					SET dir_installers=%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product
+					::SET dir_installers=%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product
 					
 					::just testing step
 					mkdir %dir_installers%
@@ -181,14 +181,14 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					echo %GenerateBuildVersion% GENERATE.Package.exe > %dir_installers%\\GENERATE.Package.exe
 					::end of just testing step
 
-					echo ==== Publishing results ====
+					echo ==== Publishing results to S3 bucket ====
 					::aws s3 cp %dir_installers%\\ s3://frustum-temp/QA/%build_version%/ --sse --recursive
-					cd %dir_installers%
-					aws s3 cp version.json %bucketName%version.json --sse
-					aws s3 cp GENERATEInstaller.exe %bucketName%GENERATEInstaller.exe --sse
-					aws s3 cp GENERATE.Bootstrapper.exe %bucketName%%GenerateBuildVersion%/GENERATE.Bootstrapper.exe --sse
-					aws s3 cp GENERATE.Package.exe %bucketName%%GenerateBuildVersion%/GENERATE.Package.exe --sse
+					::cd %dir_installers%
 				"""
+				bat """aws s3 cp %dir_installers%\\version.json %bucketName%/version.json --sse"""
+				bat """aws s3 cp %dir_installers%\\GENERATEInstaller.exe %bucketName%/GENERATEInstaller.exe --sse"""
+				bat """aws s3 cp %dir_installers%\\GENERATE.Bootstrapper.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Bootstrapper.exe --sse"""
+				bat """aws s3 cp %dir_installers%\\GENERATE.Package.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Package.exe --sse"""
 			}	
 		}	
 	}
