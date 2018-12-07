@@ -36,7 +36,7 @@ node('master') {
 if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWith('r-')) {
 	node('master') {
 		ws( env.wsPath ) {
-			stage('Checkout on master.') {
+			stage('Checkout on master') {
 				def scmVars = checkout scm
 				env.GIT_URL = scmVars.GIT_URL
 			}
@@ -102,7 +102,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 			stage('Preparing archive with source code') {
 				bat """ 
 					@echo off
-					echo Cleaning up
+					echo ==== Cleaning up ====
 					rd /Q /S %WORKSPACE%\\build
 					rd /Q /S %WORKSPACE%\\sources > nul 2>&1				
 					mkdir %WORKSPACE%\\sources
@@ -111,8 +111,14 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 				"""
 			}
 			stage('Transfer sources to S3 temp bucket') {
-				bat """aws s3 rm s3://frustum-temp/temp --recursive"""
-				bat """aws s3 cp %WORKSPACE%\\sources\\%BRANCH_NAME%_%GenerateBuildVersion%.zip s3://frustum-temp/temp/%BRANCH_NAME%_%GenerateBuildVersion%.zip --sse"""
+				bat """
+					@echo off
+					aws s3 rm s3://frustum-temp/temp --recursive
+				"""
+				bat """
+					@echo off
+					aws s3 cp %WORKSPACE%\\sources\\%BRANCH_NAME%_%GenerateBuildVersion%.zip s3://frustum-temp/temp/%BRANCH_NAME%_%GenerateBuildVersion%.zip --sse
+				"""
 			}
 	
 		}
@@ -124,15 +130,15 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWith('r-')) {
 	node('slave') {
 		stage('Clean workspace') {
-			bat """ rd /Q /S %wsPath% """
+			bat """
+				@echo off
+				rd /Q /S %wsPath%
+			"""
 		}
 		ws( env.wsPath ) {
 			stage('Copyng sources from S3 temp bucket') {
 				bat """
-					::@echo off
-					::rd /Q /S %WORKSPACE%
-					:: > nul 2>&1				
-					::mkdir %WORKSPACE%
+					@echo off
 					aws s3 cp s3://frustum-temp/temp/%BRANCH_NAME%_%GenerateBuildVersion%.zip %WORKSPACE%\\%BRANCH_NAME%_%GenerateBuildVersion%.zip --sse
 				"""
 				bat """
@@ -150,10 +156,10 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
         
 			stage('Building solution') {
 				bat """
-					::@echo off
+					@echo off
 					echo cleaning up
 					rd /Q /S %WORKSPACE%\\build
-					echo Re-build solution
+					echo ==== Re-build solution ====
 					::"C:\\Program Files (x86)\\MSBuild\\14.0\\Bin\\MSBuild.exe" Generate.Release.sln /t:Rebuild /p:Configuration=BuildRelease /p:Platform="x64" /p:QtMsBuild="C:\\Users\\Administrator\\AppData\\Local\\QtMsBuild" 
 				"""
 			}	
@@ -173,8 +179,8 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 				"""
 				env.dir_installers="%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product"
 				bat """
-					::@echo off
-					::SET dir_installers=%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product
+					@echo off
+					echo ==== Publishing results to S3 bucket ====
 					
 					::just testing step
 					mkdir %dir_installers%
@@ -184,14 +190,23 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					echo %GenerateBuildVersion% GENERATE.Package.exe > %dir_installers%\\GENERATE.Package.exe
 					::end of just testing step
 
-					echo ==== Publishing results to S3 bucket ====
-					::aws s3 cp %dir_installers%\\ s3://frustum-temp/QA/%build_version%/ --sse --recursive
-					::cd %dir_installers%
+					"""
+				bat """
+					@echo off
+					aws s3 cp %dir_installers%\\version.json %bucketName%/version.json --sse
 				"""
-				bat """aws s3 cp %dir_installers%\\version.json %bucketName%/version.json --sse"""
-				bat """aws s3 cp %dir_installers%\\GENERATEInstaller.exe %bucketName%/GENERATEInstaller.exe --sse"""
-				bat """aws s3 cp %dir_installers%\\GENERATE.Bootstrapper.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Bootstrapper.exe --sse"""
-				bat """aws s3 cp %dir_installers%\\GENERATE.Package.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Package.exe --sse"""
+				bat """
+					@echo off
+					aws s3 cp %dir_installers%\\GENERATEInstaller.exe %bucketName%/GENERATEInstaller.exe --sse
+				"""
+				bat """
+					@echo off
+					aws s3 cp %dir_installers%\\GENERATE.Bootstrapper.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Bootstrapper.exe --sse
+				"""
+				bat """
+					@echo off
+					aws s3 cp %dir_installers%\\GENERATE.Package.exe %bucketName%/%GenerateBuildVersion%/GENERATE.Package.exe --sse
+				"""
 			}	
 		}	
 	}
@@ -203,7 +218,10 @@ if (BRANCH_NAME == "release") {
 		ws (env.wsPath) {
 			stage ('Push new tag to GitHub') {
 			    env.GIT_URL = env.GIT_URL.replace('https://','')
-				bat 'echo prepare new release tag'
+				bat """
+					@echo off
+					echo prepare new release tag
+				"""
 					withCredentials([usernamePassword(credentialsId: 'vgorbulenko_token_github', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
 						bat """
 							@echo off
