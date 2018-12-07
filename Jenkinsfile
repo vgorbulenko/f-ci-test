@@ -168,10 +168,10 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					
 					::just testing step
 					mkdir %dir_installers%
-					echo %GenerateBuildVersion% version.json > version.json
-					echo %GenerateBuildVersion% GENERATEInstaller.exe > GENERATEInstaller.exe
-					echo %GenerateBuildVersion% GENERATE.Bootstrapper.exe > GENERATE.Bootstrapper.exe
-					echo %GenerateBuildVersion% GENERATE.Package.exe > GENERATE.Package.exe
+					echo %GenerateBuildVersion% version.json > %dir_installers%\\version.json
+					echo %GenerateBuildVersion% GENERATEInstaller.exe > %dir_installers%\\GENERATEInstaller.exe
+					echo %GenerateBuildVersion% GENERATE.Bootstrapper.exe > %dir_installers%\\GENERATE.Bootstrapper.exe
+					echo %GenerateBuildVersion% GENERATE.Package.exe > %dir_installers%\\GENERATE.Package.exe
 					::end of just testing step
 
 					echo Publishing results
