@@ -54,10 +54,14 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" ) {
 					echo ===Versioning===
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
 					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% %BUILD_NUMBER% 2>tmp_version.txt
-					::todo /Generate.WebInstaller/Version.cs
 					exit 0
 					"""
 				env.GenerateBuildVersion=readFile('tmp_version.txt').trim()
+				bat """
+					SET VERSION_PATH=%WORKSPACE%\\Generate.WebInstaller\\Version.cs
+					python %SCRIPTS-DIR%\\UpdateVersion-in-cs-from-source.py %VERSION_PATH% %GenerateBuildVersion% 2>tmp_version.txt
+					exit 0
+				"""
 				bat """
 					@echo off
 					echo ==== GenerateBuildVersion = %GenerateBuildVersion% =====
@@ -79,7 +83,8 @@ if (BRANCH_NAME.startsWith('r-')) {
 					@echo off
 					SET VERSION_PATH=%WORKSPACE%\\Generate\\include\\version.h
 					python %SCRIPTS-DIR%\\add-build-number-to-version-h.py %VERSION_PATH% $env.bn 2>tmp_version.txt
-					::todo /Generate.WebInstaller/Version.cs
+					SET VERSION_PATH=%WORKSPACE%\\Generate.WebInstaller\\Version.cs
+					python %SCRIPTS-DIR%\\UpdateVersion-in-cs-from-source.py %VERSION_PATH% %GenerateBuildVersion% 2>tmp_version_cs.txt
 					echo ==== GenerateBuildVersion = %GenerateBuildVersion% ====
 					exit 0
 				"""
