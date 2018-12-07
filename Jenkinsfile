@@ -123,13 +123,16 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 //building on slave and deploying results
 if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWith('r-')) {
 	node('slave') {
+		stage('Clean workspace') {
+			bat """ rd /Q /S %wsPath% """
+		}
 		ws( env.wsPath ) {
 			stage('Copyng sources from S3 temp bucket') {
 				bat """
 					::@echo off
-					rd /Q /S %WORKSPACE%
+					::rd /Q /S %WORKSPACE%
 					:: > nul 2>&1				
-					mkdir %WORKSPACE%
+					::mkdir %WORKSPACE%
 					aws s3 cp s3://frustum-temp/temp/%BRANCH_NAME%_%GenerateBuildVersion%.zip %WORKSPACE%\\%BRANCH_NAME%_%GenerateBuildVersion%.zip --sse
 				"""
 				bat """
