@@ -183,7 +183,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 					echo ==== SLAVE ==== GenerateBuildVersion == %GenerateBuildVersion% ====
 					echo ==== SLAVE ==== bucketName == %bucketName% ====
 				"""
-				env.dir_installers="%WORKSPACE%\\build\\bin\\x64\\BuildRelease-installer\\product"
+				env.dir_installers=env.wsPath+"\\build\\bin\\x64\\BuildRelease-installer\\product"
 				bat """
 					@echo off
 					echo ==== Publishing results to S3 bucket ====
