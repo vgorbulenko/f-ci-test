@@ -139,6 +139,7 @@ if (BRANCH_NAME == "master" || BRANCH_NAME == "release" || BRANCH_NAME.startsWit
 			bat """
 				@echo off
 				rd /Q /S %wsPath%
+				exit 0
 			"""
 		}
 		ws( env.wsPath ) {
